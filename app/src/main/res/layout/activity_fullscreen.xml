@@ -28,7 +28,7 @@
         <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/tv_test"/>
+                android:layout_height="wrap_content" android:id="@+id/tv_test" android:textSize="36sp"/>
         <LinearLayout android:id="@+id/fullscreen_content_controls"
                       style="?metaButtonBarStyle"
                       android:layout_width="match_parent"
@@ -38,6 +38,9 @@
                       android:orientation="horizontal"
                       tools:ignore="UselessParent">
 
+            <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="262dp" android:id="@+id/lv_btPaired"/>
             <Button android:id="@+id/dummy_button"
                     style="?metaButtonBarButtonStyle"
                     android:layout_width="0dp"
