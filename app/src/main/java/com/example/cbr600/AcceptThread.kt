@@ -9,45 +9,38 @@ import java.util.UUID
 
 class AcceptThread(uuid: UUID, mBluetoothAdapter: BluetoothAdapter) : Thread() {
 
-    private var mmServerSocket: BluetoothServerSocket? = null
-
-    init {
-        try {
-            mmServerSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("cbr600", uuid)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    private val mmServerSocket: BluetoothServerSocket? by lazy(LazyThreadSafetyMode.NONE) {
+        mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("cbr600", uuid)
     }
 
     override fun run() {
-        Log.d("Debug", "1")
-        var socket: BluetoothSocket?
-        // Keep listening until exception occurs or a socket is returned
-        while (true) {
-            try {
-                Log.d("Debug", "2")
-                socket = mmServerSocket!!.accept()
+        // Keep listening until exception occurs or a socket is returned.
+        var shouldLoop = true
+        while (shouldLoop) {
+            val socket: BluetoothSocket? = try {
+                mmServerSocket?.accept()
             } catch (e: IOException) {
-                Log.d("Debug", "3")
+                //Log.e("Debug", "Socket's accept() method failed", e)
                 e.printStackTrace()
-                break
+                shouldLoop = false
+                null
             }
-
-            // If a connection was accepted
-            if (socket != null) {
-                Log.d("Debug", "4")
-                // Do work to manage the connection (in a separate thread)
-                mmServerSocket!!.close()
-                break
+            socket?.also {
+                //manageMyConnectedSocket(it)
+                mmServerSocket?.close()
+                shouldLoop = false
             }
         }
     }
 
+    // Closes the connect socket and causes the thread to finish.
     fun cancel() {
         try {
-            mmServerSocket!!.close()
+            mmServerSocket?.close()
         } catch (e: IOException) {
+            //Log.e("Debug", "Could not close the connect socket", e)
             e.printStackTrace()
         }
     }
 }
+

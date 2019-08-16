@@ -75,7 +75,8 @@ class FullscreenActivity : AppCompatActivity() {
          */
         private val UI_ANIMATION_DELAY = 300
 
-        private val APP_UUID = UUID.randomUUID()
+        //private val APP_UUID = UUID.randomUUID()
+        val APP_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
         private val REQUEST_ENABLE_BT = 1
     }
