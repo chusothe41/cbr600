@@ -10,6 +10,8 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.widget.Toast
 import android.content.Intent
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ListView
@@ -55,6 +57,17 @@ class FullscreenActivity : AppCompatActivity() {
         }
         false
     }
+    private val mBTHandler: Handler = object : Handler(Looper.getMainLooper()) {
+        /*
+         * handleMessage() defines the operations to perform when
+         * the Handler receives a new Message to process.
+         */
+        override fun handleMessage(inputMessage: Message) {
+            // Gets the image task from the incoming Message object.
+            tv_test.text = inputMessage.obj as String
+        }
+    }
+
 
     companion object {
         /**
@@ -129,7 +142,7 @@ class FullscreenActivity : AppCompatActivity() {
         lv_btPaired.setOnItemClickListener { adapterView, view, i, l ->
             Log.d("Debug", "Pulsado lv_btPaired")
             val selectedPairedElement: BluetoothDevice = pairedDevices.elementAt(i)
-            val connectThread = ConnectThread(APP_UUID, selectedPairedElement, mBluetoothAdapter, this.mHideHandler)
+            val connectThread = ConnectThread(APP_UUID, selectedPairedElement, mBluetoothAdapter, mBTHandler)
             connectThread.start()
             //val accpetThread = AcceptThread(APP_UUID, mBluetoothAdapter)
             //accpetThread.start()
